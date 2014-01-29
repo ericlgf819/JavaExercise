@@ -1,29 +1,31 @@
 package test;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-public class JavaToolTest {
+public class JavaToolTest implements Runnable {
 
-	public static void main(String[] args) {
-		File f = new File("D:/erichello.txt");
-		if (!f.exists()) {
-			try {
-				f.createNewFile();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		}
+	public static void main(String[] args) throws Exception {
+		ExecutorService svc = Executors.newCachedThreadPool();
+		
+		svc.execute(new JavaToolTest());
+		Future<?> f = svc.submit(new JavaToolTest());
+		System.out.println(f.isDone());
+		
+		//Thread.sleep(10);
+		System.out.println("end");
+		//System.exit(0);
+		Thread.sleep(5000);
+		System.out.println(f.isDone());
+	}
+
+	@Override
+	public void run() {
 		try {
-            FileWriter writer = new FileWriter(f, true);
-            BufferedWriter bw = new BufferedWriter(writer);
-            bw.write("Yooo");
-            bw.newLine();
-            bw.flush();
-            writer.close();
-		} catch (Exception e) {
+			Thread.sleep(2000);
+            System.out.println("thread show");
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
